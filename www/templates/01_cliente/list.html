@@ -1,0 +1,49 @@
+{% extends '00_base/index.html' %}
+{% load static %}
+
+{% block extra_css %}{% endblock extra_css %}
+
+{% block main_content %}
+
+    <h1>Clientes</h1>
+
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th scope="col">NOME</th>
+            <th scope="col">CPF</th>
+            <th scope="col">TELEFONE</th>
+            <th scope="col" class="text-center" colspan="2">CONTRATO</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for cliente in object_list %}
+            <tr>
+                <th scope="row">{{ cliente.nome|upper }}</th>
+                <td>{{ cliente.cpf }}</td>
+                <td>{{ cliente.fone }}</td>
+                <td>
+                    <a href="{% url 'contrato_create' cliente.id %}" class="btn btn-primary btn-sm">INSERIR DOCUMENTO(S)</a>
+                </td>
+                <td>
+                    {% if cliente.doc_inserido %}
+                    <a href="{% url 'pdf_contrato' cliente.id %}" class="btn btn-success btn-sm">CONTRATO</a>
+                    {% else %}
+                    <button type="button" class="btn btn-secondary btn-sm">INSIRA OS DOCUMENTOS</button>
+                    {% endif %}
+                </td>
+            </tr>
+        {% empty %}
+            <tr>
+                <td colspan="4">
+                    <div class="text-uppercase text-muted text-center">
+                        Nenhum cliente cadastrado no sistema
+                    </div>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock main_content %}
+
+{% block extra_js %}{% endblock extra_js %}

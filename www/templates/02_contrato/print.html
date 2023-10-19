@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Contrato</title>
+    <style>
+        @media print {
+            .page {
+                page-break-before: always;
+                page-break-inside: avoid;
+                page-break-after: always;
+                padding: 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="page">
+        <h2 style="text-align: center;height: 100px;">FICHA DE INSCRIÇÃO ASSOCIATIVA</h1>
+        <p style="height: 20px; font-size: 14px;"><strong>NOME/RAZÃO SOCIAL:</strong> {{ pessoa.nome|upper }}</p>
+        <p style="height: 40px; font-size: 14px;"><strong>CPF/CNPJ:</strong> {{ pessoa.document_mask }}</p>
+        <p style="height: 220px;">Por meio do presente instrumento jurídico, na condição de pessoa física/jurídica, acima qualificada, venho requerer a minha inscrição e filiação como membro Associado (a) desta agremiação associativa, submetendo-me aos seus termos e estando ciente e concorde com as condições e ao inteiro teor de seus estatutos sociais, assim como dos direitos e deveres regulados e dos benefícios oferecidos de assistência Jurídica na promoção de Ação de Obrigação de Fazer e indenizações por Danos morais e Materiais e seus consectários, em defesa dos direitos difusos e ou coletivos, mediante os pagamentos contributivos e ou aqueles eventualmente exigidos para cobertura de despesas não alcançadas pela assistência oferecida.</p>
+        <p style="height: 50px;">Pede deferimento.</p>
+        <p style="height: 200px;">{{ local_data }}</p>
+        <p style="text-align: center;">___________________________________________<br>REQUERENTE</p>
+    </div>
+
+    {% for doc in pessoa.cliente_documentos.all %}
+    <div class="page">
+        <img class="img-fluid" src="http://localhost:8000/statics{{ doc.documento.url }}" style="width: 100%;" >
+    </div>
+    {% endfor %}
+
+</body>
+</html>
+
