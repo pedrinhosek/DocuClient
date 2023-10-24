@@ -43,6 +43,7 @@
                     <form method="POST" enctype="multipart/form-data">
                         {% csrf_token %}
                         <div class="row">
+                            <div class="col-12 mb-3">{{ form.errors }}</div>
                             <div class="col-12 mb-3">
                                 <label for="{{ form.images.id_for_label }}" class="form-label fw-bolder text-uppercase">
                                     Inserir arquivos
@@ -77,12 +78,31 @@
         {% for doc in pessoa.cliente_documentos.all %}
         <div class="col-md-3">
             <div class="thumbnail shadow rounded mt-3 d-flex align-items-start justify-content-end" style="background-image: url('http://{{ BASE_PATH }}{{ doc.documento.url }}');">
-                <button type="submit" class="btn btn-info btn-sm m-1">Ver</button>
+                <button type="submit" class="btn btn-info btn-sm m-1" data-bs-toggle="modal" data-bs-target="#modalVerDocumento{{ doc.id }}">Ver</button>
+
                 <form action="{% url 'contrato_delete_documento' pessoa.id doc.id %}" method="POST">
                     {% csrf_token %}
                     <button type="submit" class="btn btn-danger btn-sm m-1">Excluir</button>
                 </form>
-
+            </div>
+            <!-- Modal -->
+            <div class="modal fade" id="modalVerDocumento{{ doc.id }}" tabindex="-1" aria-labelledby="modalVerDocumento{{ doc.id }}Label"
+                 aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-xl">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="modalVerDocumento{{ doc.id }}Label">Modal title</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <img src="http://{{ BASE_PATH }}{{ doc.documento.url }}" style="width: 100%;">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary">Save changes</button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
         {% endfor %}

@@ -5,45 +5,90 @@
 
 {% block main_content %}
 
-    <h1>Clientes</h1>
 
-    <table class="table table-striped">
-        <thead>
-        <tr>
-            <th scope="col">NOME</th>
-            <th scope="col">CPF</th>
-            <th scope="col">TELEFONE</th>
-            <th scope="col" class="text-center" colspan="2">CONTRATO</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for cliente in object_list %}
-            <tr>
-                <th scope="row">{{ cliente.nome|upper }}</th>
-                <td>{{ cliente.cpf }}</td>
-                <td>{{ cliente.fone }}</td>
-                <td>
-                    <a href="{% url 'contrato_create' cliente.id %}" class="btn btn-primary btn-sm">INSERIR DOCUMENTO(S)</a>
-                </td>
-                <td>
-                    {% if cliente.doc_inserido %}
-                    <a href="{% url 'pdf_contrato' cliente.id %}" class="btn btn-success btn-sm">CONTRATO</a>
-                    {% else %}
-                    <button type="button" class="btn btn-secondary btn-sm">INSIRA OS DOCUMENTOS</button>
-                    {% endif %}
-                </td>
-            </tr>
-        {% empty %}
-            <tr>
-                <td colspan="4">
-                    <div class="text-uppercase text-muted text-center">
-                        Nenhum cliente cadastrado no sistema
-                    </div>
-                </td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+    <div class="row mb-3">
+        <div class="col-md-10">
+            <h3>Meus Cliente(s) cadastrados</h3>
+        </div>
+        <div class="col-md-2 text-end">
+            <button type="button" class="btn btn-secondary btn-sm dropdown-toggle" data-bs-toggle="dropdown">
+                FILTRO(S)
+            </button>
+            <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="{% url 'cliente_list' %}?filtro=nao_enviado"><span class="material-symbols-outlined fs-14">filter_alt</span> Cliente(s) com contrato não enviado</a></li>
+                <li><a class="dropdown-item" href="{% url 'cliente_list' %}?filtro=enviado"><span class="material-symbols-outlined fs-14">filter_alt</span> Cliente(s) com contrato enviado</a></li>
+                <li><a class="dropdown-item" href="{% url 'cliente_list' %}?filtro=todos"><span class="material-symbols-outlined fs-14">filter_alt</span> Todos os clientes cadastrados</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <table class="table table-striped table-hover table-bordered">
+                <thead>
+                    <tr>
+                        <th scope="col">NOME</th>
+                        <th scope="col">CPF</th>
+                        <th scope="col">TELEFONE</th>
+                        <th scope="col" class="text-center fs-12">CONTRATO <br> ENVIADO</th>
+                        <th scope="col" class="text-center fs-12">EDITAR <br> CLIENTE</th>
+                        <th scope="col" class="text-center fs-12">GERENCIAR <br> DOCUMENTOS</th>
+                        <th scope="col" class="text-center fs-12">GERAR <br> CONTRATO</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for cliente in object_list %}
+                    <tr>
+                        <td>{{ cliente.nome }}</td>
+                        <td>{{ cliente.document_mask }}</td>
+                        <td>{{ cliente.fone_mask }}</td>
+                        <td class="text-center">
+                            {% if cliente.contrato_enviado %}
+                            <span class="material-symbols-outlined mt-1 text-warning">task_alt</span>
+                            {% else %}
+                            <span class="material-symbols-outlined mt-1 text-danger">disabled_by_default</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <div class="d-grid gap-2">
+                                <a class="btn btn-secondary btn-sm" href="{% url 'cliente_update' cliente.id %}">
+                                    <span class="material-symbols-outlined">edit</span>
+                                </a>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="d-grid gap-2">
+                                <a class="btn btn-primary btn-sm" href="{% url 'contrato_create' cliente.id %}">
+                                    <span class="material-symbols-outlined">source_notes</span>
+                                </a>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="d-grid gap-2 text-center">
+                                {% if cliente.doc_inserido %}
+                                <a class="btn btn-warning btn-sm" href="{% url 'pdf_contrato' cliente.id %}" target="_blank">
+                                    <span class="material-symbols-outlined">picture_as_pdf</span>
+                                </a>
+                                {% else %}
+                                <span class="material-symbols-outlined mt-1">block</span>
+                                {% endif %}
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6">
+                            <div class="text-uppercase text-muted text-center">
+                                Nenhum cliente cadastrado no sistema
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
 {% endblock main_content %}
 
 {% block extra_js %}{% endblock extra_js %}

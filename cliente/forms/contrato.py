@@ -1,13 +1,5 @@
 from django import forms
-
-
-# class ContratoCreateForm(forms.Form):
-#     # Adicione um campo para o título do contrato (opcional)
-#     # title = forms.CharField(max_length=100, required=False)
-#
-#     # Adicione um campo para o envio de múltiplos arquivos
-#     # images = forms.FileField(widget=forms.FileInput(attrs={'multiple': True}))
-#     images = forms.FileField()
+from django.core.exceptions import ValidationError
 
 
 class MultipleFileInput(forms.ClearableFileInput):
@@ -25,8 +17,18 @@ class MultipleFileField(forms.FileField):
             result = [single_file_clean(d, initial) for d in data]
         else:
             result = single_file_clean(data, initial)
+
         return result
 
 
 class ContratoCreateForm(forms.Form):
     images = MultipleFileField()
+
+    def clean(self):
+        files = self.cleaned_data["images"]
+        for documento in files:
+            file_extension = documento.name.split('.')[-1].lower()
+            if not file_extension in ['jpg', 'jpeg', 'png', 'gif', 'pdf']:
+                raise ValidationError('Ao menos um documento dos enviados possui o formato inválido, os formatos aceitos: jpg, jpeg, png, gif, pdf')
+
+        return self.cleaned_data

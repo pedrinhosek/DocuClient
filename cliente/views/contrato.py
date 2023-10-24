@@ -45,39 +45,48 @@ class ContratoCreate(UserPassesTestMixin, FormView):
         pessoa = Pessoa.objects.filter(id=self.kwargs.get('pk_pessoa')).first()
 
         for documento in files:
-            pdf = PyPDF2.PdfReader(documento)
-            temp_dir = tempfile.TemporaryDirectory()
 
-            temp_file_path = f"{temp_dir.name}/temp.pdf"
-            with open(temp_file_path, 'wb') as temp_file:
-                for chunk in documento.chunks():
-                    temp_file.write(chunk)
+            file_extension = documento.name.split('.')[-1].lower()
 
-            for page_number in range(len(pdf.pages)):
-                images = convert_from_path(temp_file_path, first_page=page_number + 1, last_page=page_number + 1, output_folder=temp_dir.name)
+            if file_extension == 'pdf':
+                pdf = PyPDF2.PdfReader(documento)
+                temp_dir = tempfile.TemporaryDirectory()
 
-                if images:
-                    image = images[0]
-                    image_path = f"{temp_dir.name}/page_{page_number + 1}.jpg"
-                    image.save(image_path, 'JPEG')
+                temp_file_path = f"{temp_dir.name}/temp.pdf"
+                with open(temp_file_path, 'wb') as temp_file:
+                    for chunk in documento.chunks():
+                        temp_file.write(chunk)
 
-                    # Criar um objeto InMemoryUploadedFile a partir da imagem
-                    with open(image_path, 'rb') as img_file:
-                        img_data = img_file.read()
-                        img_file = InMemoryUploadedFile(
-                            file=io.BytesIO(img_data),
-                            field_name=None,
-                            name=image_path.split("/")[-1],
-                            content_type="image/jpeg",
-                            size=len(img_data),
-                            charset=None
-                        )
+                for page_number in range(len(pdf.pages)):
+                    images = convert_from_path(temp_file_path, first_page=page_number + 1, last_page=page_number + 1, output_folder=temp_dir.name)
+                    if images:
+                        image = images[0]
+                        image_path = f"{temp_dir.name}/page_{page_number + 1}.jpg"
+                        image.save(image_path, 'JPEG')
+                        with open(image_path, 'rb') as img_file:
+                            img_data = img_file.read()
+                            img_file = InMemoryUploadedFile(
+                                file=io.BytesIO(img_data),
+                                field_name=None,
+                                name=image_path.split("/")[-1],
+                                content_type="image/jpeg",
+                                size=len(img_data),
+                                charset=None
+                            )
 
-                        doc_contrato = DocumentoContrato(
-                            cliente=pessoa,
-                            documento=img_file
-                        )
-                        doc_contrato.save()
+                            doc_contrato = DocumentoContrato(
+                                cliente=pessoa,
+                                documento=img_file
+                            )
+                            doc_contrato.save()
+            elif file_extension in ['jpg', 'jpeg', 'png', 'gif']:
+                doc_contrato = DocumentoContrato(
+                    cliente=pessoa,
+                    documento=documento
+                )
+                doc_contrato.save()
+            else:
+                pass
 
         pessoa.doc_inserido = True
         pessoa.save()

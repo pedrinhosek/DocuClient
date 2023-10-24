@@ -1,1 +1,1 @@
-from .validates import cpf_verification, cnpj_verification
+from .validates import cpf_verification, cnpj_verification, ddd_brasil

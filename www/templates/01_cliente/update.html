@@ -1,0 +1,60 @@
+{% extends '00_base/index.html' %}
+{% load static %}
+
+{% block extra_css %}{% endblock extra_css %}
+
+{% block main_content %}
+    <h1>Novo contrato</h1>
+
+    <form method="POST">
+        {% csrf_token %}
+        <div class="row">
+            <div class="offset-md-3 col-md-6 mb-3">
+                <label class="form-label fw-bold" for="{{ form.nome.id_for_label }}">{{ form.nome.label }}</label>
+                {{ form.nome }}
+                <div id="{{ form.nome.id_for_label }}HelpBlock" class="form-text">{{ form.nome.help_text }}</div>
+                <div class="text-danger">{{ form.errors.nome.as_text }}</div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="offset-md-3 col-md-6 mb-3">
+                <label class="form-label fw-bold" for="{{ form.cpf.id_for_label }}">{{ form.cpf.label }}</label>
+                {{ form.cpf }}
+                <div id="{{ form.cpf.id_for_label }}HelpBlock" class="form-text">{{ form.cpf.help_text }}</div>
+                <div class="text-danger">{{ form.errors.cpf.as_text }}</div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="offset-md-3 col-md-6 mb-3">
+                <label class="form-label fw-bold" for="{{ form.fone.id_for_label }}">{{ form.fone.label }}</label>
+                {{ form.fone }}
+                <div id="{{ form.fone.id_for_label }}HelpBlock" class="form-text">{{ form.fone.help_text }}</div>
+                <div class="text-danger">{{ form.errors.fone.as_text }}</div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="offset-md-3 col-md-6 mb-3">
+                <label class="form-label fw-bold" for="{{ choice.data.attrs.id }}">{{ form.contrato_enviado.label.upper }}</label>
+                {% for choice in form.contrato_enviado %}
+                    <div class="custom-control custom-radio">
+                        <input type="{{ choice.data.type }}" class="custom-control-input"
+                               name="{{ choice.data.name }}" value="{{ choice.data.value }}" id="{{ choice.data.attrs.id }}"
+                                {% if choice.data.attrs.required %}required{% endif %}
+                                {% if choice.data.attrs.checked %}checked{% endif %}>
+                        <label class="custom-control-label" for="{{ choice.data.attrs.id }}">{{ choice.data.label }}</label>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="row">
+            <div class="offset-md-3 col-md-6 mt-3 d-grid">
+                <button type="submit" class="btn btn-primary btn-block">
+                    SALVAR
+                </button>
+            </div>
+        </div>
+    </form>
+
+{% endblock main_content %}
+
+{% block extra_js %}{% endblock extra_js %}

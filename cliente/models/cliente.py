@@ -9,6 +9,7 @@ class Pessoa(models.Model):
     fone = models.CharField(max_length=15, verbose_name='TELEFONE', help_text='Dê preferência ao número do Whatsapp')
 
     doc_inserido = models.BooleanField(default=False)
+    contrato_enviado = models.BooleanField(default=False, verbose_name='CONTRATO ENVIADO')
 
     class Meta:
         ordering = ["nome"]
@@ -23,4 +24,8 @@ class Pessoa(models.Model):
             mask = '{}.{}.{}/{}-{}'.format(self.cpf[:2], self.cpf[2:5], self.cpf[5:8], self.cpf[8:12], self.cpf[12:])
         else:
             return None
+        return mask
+
+    def fone_mask(self):
+        mask = '({}) {} {}-{}'.format(self.fone[:2], self.fone[2:3], self.fone[3:7], self.fone[7:11])
         return mask
