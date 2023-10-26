@@ -1,18 +1,20 @@
+import os
 import io
 import weasyprint
 import PyPDF2
 import tempfile
+import base64
 from django.conf import settings
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.http import HttpResponseRedirect
 from django.views import View
-from django.views.generic import TemplateView, CreateView, ListView, FormView, DetailView, DeleteView
+from django.views.generic import FormView, DeleteView
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from pdf2image import convert_from_path
 from cliente.models import Pessoa, DocumentoContrato
 from cliente.forms import ContratoCreateForm
 from django.http import HttpResponse
-from django.urls import reverse_lazy, reverse
+from django.urls import reverse
 from django.template import loader
 from datetime import datetime
 
@@ -76,17 +78,32 @@ class ContratoCreate(UserPassesTestMixin, FormView):
 
                             doc_contrato = DocumentoContrato(
                                 cliente=pessoa,
-                                documento=img_file
+                                documento=img_file,
                             )
                             doc_contrato.save()
+
+                            doc_contrato.doc_base64_txt = base64.b64encode(doc_contrato.documento.read()).decode('utf-8')
+                            doc_contrato.save()
+
+                            if doc_contrato.documento:
+                                if os.path.isfile(doc_contrato.documento.path):
+                                    os.remove(doc_contrato.documento.path)
+
             elif file_extension in ['jpg', 'jpeg', 'png', 'gif']:
+                doc_base64 = base64.b64encode(documento.read()).decode('utf-8')
                 doc_contrato = DocumentoContrato(
                     cliente=pessoa,
-                    documento=documento
+                    documento=documento,
+                    doc_base64_txt=doc_base64
                 )
                 doc_contrato.save()
+
+                if doc_contrato.documento:
+                    if os.path.isfile(doc_contrato.documento.path):
+                        os.remove(doc_contrato.documento.path)
             else:
                 pass
+
 
         pessoa.doc_inserido = True
         pessoa.save()
@@ -105,6 +122,14 @@ class DeleteDocContrato(UserPassesTestMixin, DeleteView):
     def get_success_url(self):
         url = reverse('contrato_create', args=[self.kwargs.get('pk_pessoa')])
         return url
+
+    def form_valid(self, form):
+        success_url = self.get_success_url()
+        if self.object.documento:
+            if os.path.isfile(self.object.documento.path):
+                os.remove(self.object.documento.path)
+        self.object.delete()
+        return HttpResponseRedirect(success_url)
 
     def test_func(self):
         return True

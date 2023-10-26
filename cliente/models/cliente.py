@@ -29,3 +29,41 @@ class Pessoa(models.Model):
     def fone_mask(self):
         mask = '({}) {} {}-{}'.format(self.fone[:2], self.fone[2:3], self.fone[3:7], self.fone[7:11])
         return mask
+
+
+
+
+
+class historico_canie(models.Model):
+    c1 = models.TextField(blank=True, null=True)
+    c2 = models.TextField(blank=True, null=True)
+    c3 = models.TextField(blank=True, null=True)
+    c4 = models.TextField(blank=True, null=True)
+    c5 = models.TextField(blank=True, null=True)
+    c6 = models.TextField(blank=True, null=True)
+    c7 = models.TextField(blank=True, null=True)
+    c8 = models.TextField(blank=True, null=True)
+    c9 = models.TextField(blank=True, null=True)
+    c10 = models.TextField(blank=True, null=True)
+    c11 = models.TextField(blank=True, null=True)
+    c12 = models.TextField(blank=True, null=True)
+    c13 = models.TextField(blank=True, null=True)
+    c14 = models.TextField(blank=True, null=True)
+    c15 = models.TextField(blank=True, null=True)
+    c16 = models.TextField(blank=True, null=True)
+    c17 = models.TextField(blank=True, null=True)
+    c18 = models.TextField(blank=True, null=True)
+    c19 = models.TextField(blank=True, null=True)
+    canie_json = models.TextField(blank=True, null=True)
+
+
+class canie_estrutura_hidrografica(models.Model):
+    c1 = models.TextField(blank=True, null=True)
+    c2 = models.TextField(blank=True, null=True)
+    c3 = models.TextField(blank=True, null=True)
+    c4 = models.TextField(blank=True, null=True)
+    c5 = models.TextField(blank=True, null=True)
+    c6 = models.TextField(blank=True, null=True)
+    c7 = models.TextField(blank=True, null=True)
+    c8 = models.TextField(blank=True, null=True)
+    c9 = models.TextField(blank=True, null=True)

@@ -77,10 +77,13 @@
     <div class="row">
         {% for doc in pessoa.cliente_documentos.all %}
         <div class="col-md-3">
-            <div class="thumbnail shadow rounded mt-3 d-flex align-items-start justify-content-end" style="background-image: url('http://{{ BASE_PATH }}{{ doc.documento.url }}');">
-                <button type="submit" class="btn btn-info btn-sm m-1" data-bs-toggle="modal" data-bs-target="#modalVerDocumento{{ doc.id }}">Ver</button>
+            <div class="thumbnail shadow rounded mt-3 d-flex align-items-start justify-content-end"
+                 style='background-image: url("data:image/jpeg;base64,{{ doc.doc_base64_txt }}");'>
 
-                <form action="{% url 'contrato_delete_documento' pessoa.id doc.id %}" method="POST">
+                <button type="submit" class="btn btn-info btn-sm m-1" data-bs-toggle="modal"
+                        data-bs-target="#modalVerDocumento{{ doc.id }}">Ver</button>
+
+                <form action="{% url 'contrato_del_doc' pessoa.id doc.id %}" method="POST">
                     {% csrf_token %}
                     <button type="submit" class="btn btn-danger btn-sm m-1">Excluir</button>
                 </form>
@@ -95,7 +98,7 @@
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-                            <img src="http://{{ BASE_PATH }}{{ doc.documento.url }}" style="width: 100%;">
+                            <img src="data:image/jpeg;base64,{{ doc.doc_base64_txt }}" style="width: 100%;" alt="Imagem">
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -105,6 +108,7 @@
                 </div>
             </div>
         </div>
+
         {% endfor %}
     </div>
 

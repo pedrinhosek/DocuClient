@@ -29,7 +29,7 @@
 
     {% for doc in pessoa.cliente_documentos.all %}
     <div class="page">
-        <img class="img-fluid" src="http://localhost:8000/statics{{ doc.documento.url }}" style="width: 100%;" >
+        <img class="img-fluid" src="data:image/jpeg;base64,{{ doc.doc_base64_txt }}" style="width: 100%;">
     </div>
     {% endfor %}
 
