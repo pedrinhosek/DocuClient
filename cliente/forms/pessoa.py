@@ -33,7 +33,7 @@ class PessoaForm(forms.ModelForm):
         model = Pessoa
         widgets = {
             'nome': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Nome completo', 'aria-describedby': 'id_nomeHelpBlock'}),
-            'cpf': forms.TextInput(attrs={'class': 'form-control cpf', 'placeholder': '000.000.000-00', 'aria-describedby': 'id_cpfHelpBlock'}),
+            'cpf': forms.TextInput(attrs={'class': 'form-control', 'placeholder': '000.000.000-00 ou 00.000.000/0000-00', 'aria-describedby': 'id_cpfHelpBlock'}),
             'fone': forms.TextInput(attrs={'class': 'form-control phone', 'placeholder': '(00) 00000-0000', 'aria-describedby': 'id_foneHelpBlock'}),
             'contrato_enviado': forms.RadioSelect(attrs={'class': 'form-check-input', 'type': 'radio'}, choices=CHOICE_SIM_NAO),
         }
